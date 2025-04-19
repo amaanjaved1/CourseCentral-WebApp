@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Course Central - Plan Your Academic Journey",
   description: "The ultimate course planning tool for university students",
+  viewport: "width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no",
 };
 
 export default function RootLayout({
@@ -25,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-w-[320px]`}
       >
         {children}
       </body>
