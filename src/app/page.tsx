@@ -34,59 +34,65 @@ export default function Home() {
       {/* AI Feature Button - Make it more prominent */}
       <div className="bg-white flex justify-center pt-4 pb-0">
         <div className="animate-subtle-bounce">
-          <Link 
-            href="/ai-features" 
-            className={`group relative flex items-center bg-gradient-to-r from-[#d62839] to-[#a31e36] text-white px-5 py-2.5 rounded-xl inline-block font-medium shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out max-w-lg w-full overflow-hidden ${shouldAnimate ? 'animate-attention' : ''}`}
-            onMouseEnter={handleButtonHover}
-          >
-            {/* Border */}
-            <div className="absolute -inset-px rounded-xl border border-[#00305f]/30 opacity-50 z-0"></div>
-            
-            {/* Accent dots and glow */}
-            <div className="absolute inset-0 overflow-hidden rounded-xl">
-              <div className="absolute top-0 right-0 w-24 h-24 -mt-12 -mr-12 bg-[#efb215]/10 rounded-full blur-xl"></div>
-              <div className="absolute bottom-0 left-0 w-20 h-20 -mb-10 -ml-10 bg-[#00305f]/10 rounded-full blur-xl"></div>
-            </div>
-            
-            <div className="flex items-center justify-between w-full z-10">
-              <div className="flex items-center">
-                <div className="relative flex items-center justify-center bg-gradient-to-br from-[#efb215] to-[#ff8a00] rounded-lg w-9 h-9 mr-3 shadow-md group-hover:scale-110 transition-transform duration-300 overflow-hidden">
-                  {/* Chat bubble icon */}
-                  <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-white">
-                      <path fillRule="evenodd" d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h9a.75.75 0 000-1.5h-9z" clipRule="evenodd" />
-                    </svg>
-                    <div className="absolute -top-1 -right-1">
-                      <div className="w-1.5 h-1.5 bg-blue-300 rounded-full animate-ping-slow"></div>
-                    </div>
+          {/* Redesigned AI Course Assistant Card - Pill-shaped */}
+          <div className="relative max-w-md w-full overflow-hidden">
+            <Link 
+              href="/ai-features" 
+              className="group flex items-center justify-between bg-gradient-to-r from-[#d62839] to-[#a31e36] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-lg transition-colors duration-300 w-full overflow-hidden"
+              onMouseEnter={handleButtonHover}
+            >
+              {/* Improved rounded pill shape and hover effects */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-30 group-hover:opacity-40 transition-colors duration-300"></div>
+              <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+              
+              {/* Enhanced orange circular border/glow */}
+              <div className="absolute -inset-0.5 rounded-full border-2 border-[#ff8a00] opacity-60 animate-pulse-slow group-hover:opacity-80 transition-colors duration-300"></div>
+              
+              {/* Fixed animated border that moves around the entire card */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                {/* Improved circular moving border effect */}
+                <div className="absolute -inset-[2px] border-4 border-[#ffb700] rounded-full animate-border-travel overflow-hidden shadow-[0_0_10px_3px_rgba(255,183,0,0.4)] group-hover:shadow-[0_0_12px_4px_rgba(255,183,0,0.5)] transition-colors duration-300"></div>
+                
+                {/* Enhanced corner glow - only keeping bottom left */}
+                <div className="absolute bottom-0 left-0 w-28 h-28 -mb-10 -ml-10 bg-[#ff8a00]/20 rounded-full blur-xl group-hover:bg-[#ff8a00]/30 transition-colors duration-300"></div>
+              </div>
+              
+              {/* Content */}
+              <div className="flex items-center z-10">
+                <div className="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md mr-3 group-hover:text-[#d62839] transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-[#d62839]">
+                    <path fillRule="evenodd" d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h9a.75.75 0 000-1.5h-9z" clipRule="evenodd" />
+                  </svg>
+                  <div className="absolute -top-1 -right-1">
+                    <div className="w-2.5 h-2.5 bg-[#ff8a00] rounded-full animate-ping-slow"></div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-base group-hover:text-[#efb215] transition-colors duration-300">AI Course Assistant</h3>
-                  <p className="text-white/80 text-xs">Ask anything about Queen's courses</p>
+                  <h3 className="font-semibold text-base text-white transition-colors duration-300">AI Course Assistant</h3>
+                  <p className="text-white/90 text-xs">Ask anything about Queen's courses</p>
                 </div>
               </div>
               
-              <span className="border-l border-white/20 pl-3 ml-2 text-sm font-medium text-white whitespace-nowrap flex items-center group-hover:text-[#efb215] transition-colors duration-300">
+              <span className="border-l border-white/30 pl-3 ml-1 text-sm font-medium text-white whitespace-nowrap flex items-center transition-colors duration-300 z-10">
                 Try Now
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 ml-1.5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 ml-1.5 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </span>
-            </div>
-          </Link>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Add these animations to your globals.css or use them inline */}
       <style jsx global>{`
         @keyframes spin-slow {
-          0% { transform: rotate(0deg) translateX(-50%); }
-          100% { transform: rotate(360deg) translateX(-50%); }
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
         @keyframes ping-slow {
           0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.2); opacity: 0.5; }
+          50% { transform: scale(1.5); opacity: 0.5; }
           100% { transform: scale(1); opacity: 1; }
         }
         .animate-spin-slow {
@@ -97,13 +103,48 @@ export default function Home() {
         }
         @keyframes subtle-bounce {
           0%, 100% { transform: translateY(0) translateZ(0); }
-          50% { transform: translateY(-5px) translateZ(0); }
+          50% { transform: translateY(-8px) translateZ(0); }
         }
         .animate-subtle-bounce {
           animation: subtle-bounce 4s ease-in-out infinite;
           will-change: transform;
           backface-visibility: hidden;
           -webkit-font-smoothing: subpixel-antialiased;
+        }
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 0.95; }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced animation for the traveling border effect */
+        @keyframes border-travel {
+          0% {
+            clip-path: polygon(0 0, 8% 0, 8% 100%, 0 100%);
+            opacity: 1;
+          }
+          25% {
+            clip-path: polygon(0 0, 100% 0, 100% 8%, 0 8%);
+            opacity: 1;
+          }
+          50% {
+            clip-path: polygon(92% 0, 100% 0, 100% 100%, 92% 100%);
+            opacity: 1;
+          }
+          75% {
+            clip-path: polygon(0 92%, 100% 92%, 100% 100%, 0 100%);
+            opacity: 1;
+          }
+          100% {
+            clip-path: polygon(0 0, 8% 0, 8% 100%, 0 100%);
+            opacity: 1;
+          }
+        }
+        .animate-border-travel {
+          animation: border-travel 3s linear infinite;
+          filter: drop-shadow(0 0 3px #ffb700);
         }
       `}</style>
 
@@ -240,7 +281,7 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-            {/* Feature 3 - Move to first position and enhance */}
+            {/* Feature 1: AI Course Assistant */}
             <div className="group relative bg-gradient-to-br from-[#efb215]/3 to-[#efb215]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02]">
               <div className="bg-white rounded-2xl p-6 sm:p-8 h-full shadow-sm hover:shadow-lg transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#efb215] to-[#efb215]/50 rounded-t-xl transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -250,7 +291,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#00305f] text-lg sm:text-xl mb-3 group-hover:text-[#efb215] transition-colors duration-300">AI Course Assistant</h3>
-                <p className="text-gray-600 text-sm sm:text-base">Our intelligent chatbot answers any question about Queen's courses, professors, and teaching styles instantly - like having a personal academic advisor.</p>
+                <p className="text-gray-600 text-sm sm:text-base">Our intelligent chatbot answers any question about Queen's courses, professors, and teaching styles instantly – like having a personal academic advisor.</p>
                 <div className="w-8 h-8 rounded-full bg-[#fef5e7] flex items-center justify-center mt-6 ml-auto transform translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#efb215]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7" />
@@ -259,7 +300,7 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Feature 1 */}
+            {/* Feature 2: Real Grade Distributions */}
             <div className="group relative bg-gradient-to-br from-[#d62839]/3 to-[#d62839]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02]">
               <div className="bg-white rounded-2xl p-6 sm:p-8 h-full shadow-sm hover:shadow-lg transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d62839] to-[#d62839]/50 rounded-t-xl transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -278,7 +319,7 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Feature 2 */}
+            {/* Feature 3: Course Analytics */}
             <div className="group relative bg-gradient-to-br from-[#00305f]/3 to-[#00305f]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02]">
               <div className="bg-white rounded-2xl p-6 sm:p-8 h-full shadow-sm hover:shadow-lg transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00305f] to-[#00305f]/50 rounded-t-xl transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -297,7 +338,7 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Feature 4 */}
+            {/* Feature 4: Semester Tracking */}
             <div className="group relative bg-gradient-to-br from-[#d62839]/3 to-[#d62839]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02]">
               <div className="bg-white rounded-2xl p-6 sm:p-8 h-full shadow-sm hover:shadow-lg transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d62839] to-[#d62839]/50 rounded-t-xl transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -307,7 +348,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-[#00305f] text-lg sm:text-xl mb-3 group-hover:text-[#d62839] transition-colors duration-300">Semester Tracking</h3>
-                <p className="text-gray-600 text-sm sm:text-base">Compare how courses change over time with our comprehensive database of historical course information since 2015.</p>
+                <p className="text-gray-600 text-sm sm:text-base">Compare how courses have evolved over time with historical course data going back to 2015.</p>
                 <div className="w-8 h-8 rounded-full bg-[#f9e5e8] flex items-center justify-center mt-6 ml-auto transform translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#d62839]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7" />
@@ -316,21 +357,17 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Feature 5 */}
-            <div className="group relative bg-gradient-to-br from-[#00305f]/3 to-[#00305f]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02] sm:col-span-2 lg:col-span-1">
+            {/* Feature 5: Mobile Access */}
+            <div className="group relative bg-gradient-to-br from-[#00305f]/3 to-[#00305f]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02]">
               <div className="bg-white rounded-2xl p-6 sm:p-8 h-full shadow-sm hover:shadow-lg transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00305f] to-[#00305f]/50 rounded-t-xl transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                <div className="flex flex-col">
-                  <div className="bg-[#e5e9f0] h-16 w-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#00305f] group-hover:shadow-md transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-[#00305f] group-hover:text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-[#00305f] text-lg sm:text-xl mb-3 group-hover:text-[#00305f] transition-colors duration-300">Mobile Access</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">Browse course stats and chat with our AI advisor from any device, perfect for researching classes on the go.</p>
-                  </div>
+                <div className="bg-[#e5e9f0] h-16 w-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#00305f] group-hover:shadow-md transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-[#00305f] group-hover:text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
                 </div>
+                <h3 className="font-bold text-[#00305f] text-lg sm:text-xl mb-3 group-hover:text-[#00305f] transition-colors duration-300">Mobile Access</h3>
+                <p className="text-gray-600 text-sm sm:text-base">View course stats and chat with our AI assistant from any device — ideal for researching on the go.</p>
                 <div className="w-8 h-8 rounded-full bg-[#e5e9f0] flex items-center justify-center mt-6 ml-auto transform translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#00305f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7" />
@@ -338,11 +375,31 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            
+            {/* Feature 6: Student-Powered Reviews */}
+            <div className="group relative bg-gradient-to-br from-[#efb215]/3 to-[#efb215]/8 p-0.5 rounded-2xl transform transition duration-500 hover:scale-[1.02]">
+              <div className="bg-white rounded-2xl p-6 sm:p-8 h-full shadow-sm hover:shadow-lg transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#efb215] to-[#efb215]/50 rounded-t-xl transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                <div className="bg-[#fef5e7] h-16 w-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#efb215] group-hover:shadow-md transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-[#efb215] group-hover:text-white transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-[#00305f] text-lg sm:text-xl mb-3 group-hover:text-[#efb215] transition-colors duration-300">Student-Powered Reviews</h3>
+                <p className="text-gray-600 text-sm sm:text-base">See feedback based on student experiences pulled from Reddit and RateMyProfessor — filtered to be relevant to Queen's courses and instructors.</p>
+                <div className="w-8 h-8 rounded-full bg-[#fef5e7] flex items-center justify-center mt-6 ml-auto transform translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#efb215]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
 
-      {/* Why It Matters Section */}
+      {/* Why CourseCentral Matters Section */}
       <section className="relative py-20 sm:py-24 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-[#f9f9fa]"></div>
         <div className="absolute h-96 w-96 bg-[#efb215]/10 rounded-full blur-3xl right-0 top-1/4 transform translate-x-1/2"></div>
@@ -351,63 +408,67 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-14">
             <div className="inline-block relative mb-4">
-              <span className="inline-block px-4 py-2 rounded-full bg-[#00305f]/10 text-[#00305f] text-sm font-medium">Value</span>
+              <span className="inline-block px-4 py-2 rounded-full bg-[#00305f]/10 text-[#00305f] text-sm font-medium">Why Choose Us</span>
               <div className="absolute -right-2 -bottom-2 w-5 h-5 bg-[#d62839]/20 rounded-full blur-md animate-pulse-slow"></div>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00305f] to-[#00305f]/90">Why CourseCentral matters</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00305f] to-[#00305f]/90">Why CourseCentral Matters</span>
             </h2>
-            <p className="text-gray-600 max-w-xl mx-auto text-sm sm:text-base">
-              Data-driven insights for better academic decisions
-            </p>
+            <div className="relative mx-auto w-24 mb-6">
+              <div className="w-24 h-1.5 bg-gradient-to-r from-[#d62839] to-[#a31e36] mb-8 rounded-full mx-auto"></div>
+              <div className="absolute -top-1 -right-1 w-8 h-8 bg-[#efb215]/30 rounded-full blur-md animate-pulse-slow"></div>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {/* Reason 1: Make Smarter Course Decisions */}
             <div className="group bg-white p-6 rounded-xl border border-gray-100 hover:border-[#d62839]/30 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex items-center mb-6">
                 <div className="bg-[#d62839] h-12 w-12 rounded-full flex items-center justify-center text-white font-bold mr-4 shadow-md relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
                   <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#d62839] transition-colors duration-300">24/7 AI Course Guidance</h3>
+                <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#d62839] transition-colors duration-300">Make Smarter Course Decisions</h3>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-[#d62839] font-medium">→</div>
-                <p className="text-gray-600">Get instant expert advice anytime</p>
+                <p className="text-gray-600">Know what to expect before enrolling with insights from real grade data and past student reviews.</p>
               </div>
             </div>
             
+            {/* Reason 2: Get Answers, Instantly */}
             <div className="group bg-white p-6 rounded-xl border border-gray-100 hover:border-[#00305f]/30 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex items-center mb-6">
                 <div className="bg-[#00305f] h-12 w-12 rounded-full flex items-center justify-center text-white font-bold mr-4 shadow-md relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
                   <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#00305f] transition-colors duration-300">Historical Grade Data</h3>
+                <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#00305f] transition-colors duration-300">Get Answers, Instantly</h3>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-[#00305f] font-medium">→</div>
-                <p className="text-gray-600">See actual grade distributions by semester</p>
+                <p className="text-gray-600">No more guessing — use the chatbot to ask questions about classes and profs, 24/7.</p>
               </div>
             </div>
             
+            {/* Reason 3: Built for Queen's */}
             <div className="group bg-white p-6 rounded-xl border border-gray-100 hover:border-[#efb215]/30 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div className="flex items-center mb-6">
                 <div className="bg-[#efb215] h-12 w-12 rounded-full flex items-center justify-center text-white font-bold mr-4 shadow-md relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
                   <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#efb215] transition-colors duration-300">Course Comparisons</h3>
+                <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#efb215] transition-colors duration-300">Built for Queen's</h3>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-[#efb215] font-medium">→</div>
-                <p className="text-gray-600">Directly compare similar courses side-by-side</p>
+                <p className="text-gray-600">CourseCentral is made specifically for Queen's courses and students.</p>
               </div>
             </div>
           </div>
