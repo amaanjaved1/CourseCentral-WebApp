@@ -8,23 +8,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check your .env.local file.');
 }
 
-let supabase;
+// Create and export the properly typed Supabase client
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-try {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-  console.log('Supabase client initialized successfully');
-} catch (error) {
-  console.error('Error initializing Supabase client:', error);
-  // Create a dummy client for development to prevent the app from crashing
-  supabase = {
-    auth: {
-      signUp: async () => ({ error: { message: 'Supabase client not properly initialized' } }),
-      signInWithPassword: async () => ({ error: { message: 'Supabase client not properly initialized' } }),
-      signOut: async () => ({}),
-      getSession: async () => ({ data: { session: null }, error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-    }
-  } as any;
-}
-
-export { supabase }; 
+console.log('Supabase client initialized successfully'); 

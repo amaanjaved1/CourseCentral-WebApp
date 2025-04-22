@@ -80,8 +80,26 @@ export default function Navigation() {
   
   // Function to handle logout
   const handleLogout = async () => {
-    await signOut();
-    setUserMenuOpen(false);
+    try {
+      await signOut();
+      
+      // Clear all localStorage and sessionStorage
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Clear all cookies
+      document.cookie.split(';').forEach(cookie => {
+        const [name] = cookie.trim().split('=');
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      });
+      
+      // Force a complete page reload to clear all state
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Unexpected error during sign out:', error);
+    } finally {
+      setUserMenuOpen(false);
+    }
   };
 
   return (

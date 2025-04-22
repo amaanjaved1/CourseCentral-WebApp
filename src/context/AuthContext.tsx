@@ -10,11 +10,11 @@ type AuthContextType = {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string) => Promise<{ error: any; data?: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-  resendVerificationEmail: (email: string) => Promise<{ error: any; data: any }>;
-  resetPassword: (email: string) => Promise<{ error: any; data: any }>;
+  signOut: () => Promise<{ success: boolean; error?: any }>;
+  resendVerificationEmail: (email: string) => Promise<{ error: any; data?: any }>;
+  resetPassword: (email: string) => Promise<{ error: any; data?: any }>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -182,10 +182,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Sign out function
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
-      router.push('/');
-    } catch (error) {
-      console.error('Sign out error:', error);
+      // First manually clear our local state
+      setUser(null);
+      setSession(null);
+      
+      // Clear localStorage items related to Supabase
+      if (typeof window !== 'undefined') {
+        // Clear localStorage items that might be related to auth
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+            localStorage.removeItem(key);
+          }
+        });
+      }
+      
+      // Then try to sign out from Supabase (but don't worry if it fails due to missing session)
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Sign out error (non-critical):', error);
+      }
+      
+      // Always return success since we've cleared the local state
+      return { success: true };
+    } catch (error: any) {
+      console.error('Error during sign out:', error);
+      // Still consider it a success if we've cleared the local state
+      return { success: true };
     }
   };
 
