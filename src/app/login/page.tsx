@@ -12,11 +12,24 @@ export default function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
+  const verified = searchParams.get('verified') === 'true';
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showVerificationSuccess, setShowVerificationSuccess] = useState(verified);
+
+  // Clear verification success message after some time
+  useEffect(() => {
+    if (verified) {
+      const timer = setTimeout(() => {
+        setShowVerificationSuccess(false);
+      }, 8000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [verified]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,6 +94,22 @@ export default function Login() {
           
           <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
             <div className="p-8">
+              {showVerificationSuccess && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg animate-bounce-in">
+                  <div className="flex items-center mb-2">
+                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-bold text-green-800">Verification successful!</span>
+                      <p className="text-sm text-green-700">Your email has been verified. You can now sign in to access all features.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               {error && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">
                   {error}
@@ -183,6 +212,24 @@ export default function Login() {
         }
         .animate-pulse-slow {
           animation: pulse-slow 3s ease-in-out infinite;
+        }
+        
+        @keyframes bounceIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.8) translateY(-10px);
+          }
+          60% {
+            opacity: 1;
+            transform: scale(1.03) translateY(0);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+        .animate-bounce-in {
+          animation: bounceIn 0.6s ease-out forwards;
         }
       `}</style>
     </div>
