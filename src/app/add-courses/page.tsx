@@ -43,6 +43,13 @@ export default function AddCourses() {
       // Simulate upload success
       setTimeout(() => {
         setIsUploaded(true);
+        
+        // Store upload information in localStorage
+        localStorage.setItem('courseDistributionUploaded', 'true');
+        localStorage.setItem('courseDistributionUploadedAt', new Date().toISOString());
+        
+        // In a real implementation, you would also store this in the database
+        // For example: supabase.from('user_uploads').insert({user_id: user.id, upload_type: 'grade_distribution', file_name: file.name});
       }, 1500);
     } else {
       alert("Please upload a PDF file. SOLUS grade distributions are downloaded as PDF files.");
