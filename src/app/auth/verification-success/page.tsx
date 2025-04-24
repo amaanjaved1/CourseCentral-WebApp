@@ -5,12 +5,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import Image from 'next/image';
+import { useAuth } from '@/context/AuthContext';
 
 // Inner component that uses searchParams
 function VerificationSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const redirectTo = searchParams.get('redirect_to') || '/';
+  const { user, isLoading: authLoading } = useAuth();
   
   const [countdown, setCountdown] = useState(5);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +21,7 @@ function VerificationSuccessContent() {
     // Log page load
     console.log('Verification success page loaded');
     console.log('Redirect parameter:', redirectTo);
+    console.log('User authenticated:', !!user);
     
     try {
       // Start countdown to auto-redirect
@@ -27,8 +30,14 @@ function VerificationSuccessContent() {
           console.log('Countdown:', prev);
           if (prev <= 1) {
             clearInterval(timer);
-            console.log('Redirecting to login page with verified=true parameter');
-            router.push('/login?verified=true');
+            // If user is already logged in, go directly to home or the redirect URL
+            if (user) {
+              console.log('User already logged in, redirecting to:', redirectTo);
+              router.push(redirectTo);
+            } else {
+              console.log('Redirecting to login page with verified=true parameter');
+              router.push('/login?verified=true');
+            }
             return 0;
           }
           return prev - 1;
@@ -43,7 +52,7 @@ function VerificationSuccessContent() {
       console.error('Error in countdown timer:', err);
       setError('An error occurred while setting up the page. Please try again.');
     }
-  }, [router, redirectTo]);
+  }, [router, redirectTo, user]);
 
   if (error) {
     return (
@@ -101,18 +110,21 @@ function VerificationSuccessContent() {
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-3">Email Verified Successfully!</h1>
             
             <p className="text-center text-gray-600 mb-6">
-              Your account has been successfully verified. You can now sign in with your Queen's University email and password to access all features.
+              Your account has been successfully verified. 
+              {!user && " You can now sign in with your Queen's University email and password to access all features."}
             </p>
 
             <div className="space-y-2 my-8 bg-blue-50 p-4 rounded-lg border border-blue-100">
               <h3 className="font-medium text-blue-700">What's Next?</h3>
               <ul className="text-sm text-blue-800 space-y-1.5">
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-600 mr-1.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Log in with your verified account</span>
-                </li>
+                {!user && (
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 text-blue-600 mr-1.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Log in with your verified account</span>
+                  </li>
+                )}
                 <li className="flex items-start">
                   <svg className="h-5 w-5 text-blue-600 mr-1.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -130,20 +142,32 @@ function VerificationSuccessContent() {
             
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-4">
-                Redirecting to login in {countdown} seconds...
+                Redirecting to {user ? redirectTo === '/' ? 'home' : 'your destination' : 'login'} in {countdown} seconds...
               </p>
               
               <div className="flex flex-col space-y-4">
-                <button
-                  onClick={() => {
-                    console.log('Login button clicked');
-                    router.push('/login?verified=true');
-                  }}
-                  className="px-4 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors"
-                >
-                  Log in now
-                </button>
-                {redirectTo !== '/' && (
+                {user ? (
+                  <button
+                    onClick={() => {
+                      console.log('Home button clicked');
+                      router.push(redirectTo);
+                    }}
+                    className="px-4 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors"
+                  >
+                    Continue to {redirectTo === '/' ? 'Home' : 'Destination'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      console.log('Login button clicked');
+                      router.push('/login?verified=true');
+                    }}
+                    className="px-4 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors"
+                  >
+                    Log in now
+                  </button>
+                )}
+                {redirectTo !== '/' && !user && (
                   <button
                     onClick={() => {
                       console.log('Destination button clicked, going to:', redirectTo);

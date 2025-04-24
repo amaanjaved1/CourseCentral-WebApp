@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
+import { useAuth } from '@/context/AuthContext';
 
 // Helper function to extract hash params
 const getHashParams = (hash: string) => {
@@ -26,6 +27,7 @@ const getHashParams = (hash: string) => {
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useAuth();
   
   // States for handling verification flow
   const [isLoading, setIsLoading] = useState(true);
@@ -85,9 +87,14 @@ function VerifyEmailContent() {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     } else if (isSuccess && countdown === 0) {
-      router.push('/login?verified=true');
+      // If user is already authenticated, go to home, else go to login
+      if (user) {
+        router.push('/');
+      } else {
+        router.push('/login?verified=true');
+      }
     }
-  }, [isSuccess, countdown, router]);
+  }, [isSuccess, countdown, router, user]);
 
   // Get params from URL and verify token on component mount
   useEffect(() => {
@@ -273,19 +280,30 @@ function VerifyEmailContent() {
               </svg>
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Email Verified!</h1>
-            <p className="text-gray-600 mb-6">Your email has been successfully verified. You can now proceed to sign in.</p>
+            <p className="text-gray-600 mb-6">Your email has been successfully verified. {!user && "You can now proceed to sign in."}</p>
             
             <div className="bg-blue-50 p-4 rounded-lg mb-6">
-              <p className="text-sm text-blue-600">Redirecting you to the login page in <span className="font-bold">{countdown}</span> seconds...</p>
+              <p className="text-sm text-blue-600">
+                Redirecting you to the {user ? 'home' : 'login'} page in <span className="font-bold">{countdown}</span> seconds...
+              </p>
             </div>
             
             <div className="space-y-3">
-              <button
-                onClick={() => router.push('/login?verified=true')}
-                className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-              >
-                Go to Login Now
-              </button>
+              {user ? (
+                <button
+                  onClick={() => router.push('/')}
+                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                >
+                  Go to Home Now
+                </button>
+              ) : (
+                <button
+                  onClick={() => router.push('/login?verified=true')}
+                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                >
+                  Go to Login Now
+                </button>
+              )}
               
               <Link href="/" className="inline-block text-blue-600 hover:underline">
                 Return to Home

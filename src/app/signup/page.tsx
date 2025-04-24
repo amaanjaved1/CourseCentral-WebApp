@@ -17,7 +17,14 @@ export default function SignUp() {
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { signUp, user, isLoading: authLoading } = useAuth();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push('/');
+    }
+  }, [user, authLoading, router]);
   
   // Extract the redirect URL from the query parameters
   useEffect(() => {
