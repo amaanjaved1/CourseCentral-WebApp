@@ -1,94 +1,103 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
 import Navigation from '@/components/Navigation';
 
-// Inner component that uses searchParams
+// Helper function to extract hash params
+const getHashParams = (hash: string) => {
+  const params: Record<string, string> = {};
+  if (!hash || hash.length <= 1) return params;
+
+  const hashContent = hash.startsWith('#') ? hash.substring(1) : hash;
+  const hashParts = hashContent.split('&');
+
+  hashParts.forEach(part => {
+    const [key, value] = part.split('=');
+    if (key && value) {
+      params[key] = decodeURIComponent(value);
+    }
+  });
+
+  return params;
+};
+
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  
+  // States for handling verification flow
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(5);
-  const [debugInfo, setDebugInfo] = useState<Record<string, any>>({});
   const [hashParams, setHashParams] = useState<Record<string, string>>({});
-
-  // Handle the countdown and redirection
-  useEffect(() => {
-    if (isSuccess) {
-      const interval = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            router.push('/login?verified=true');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [isSuccess, router]);
+  const [isDirectAccess, setIsDirectAccess] = useState(false);
+  const [debugInfo, setDebugInfo] = useState({
+    searchParams: {},
+    hashParams: {},
+    isDirectAccess: false,
+    verificationAttempt: false,
+    method: '',
+    tokenUsed: '',
+    codeUsed: '',
+    emailUsed: '',
+    typeUsed: '',
+    verificationResponse: null,
+    verificationError: null
+  });
 
   useEffect(() => {
     // Get params from hash if they exist
     if (typeof window !== 'undefined') {
       const hash = window.location.hash;
-      if (hash) {
-        try {
-          // Remove the # and parse as URLSearchParams
-          const hashString = hash.substring(1);
-          const params = new URLSearchParams(hashString);
-          const hashParamsObj: Record<string, string> = {};
-          
-          params.forEach((value, key) => {
-            hashParamsObj[key] = value;
-          });
-          
-          setHashParams(hashParamsObj);
-          setDebugInfo(prev => ({...prev, hashParams: hashParamsObj}));
-          console.log('Hash params:', hashParamsObj);
-        } catch (e) {
-          console.error('Error parsing hash params:', e);
-        }
-      }
+      const params = getHashParams(hash);
+      setHashParams(params);
+      
+      // Add hash params to debug info
+      setDebugInfo(prev => ({
+        ...prev,
+        hashParams: params
+      }));
     }
 
-    const params = Object.fromEntries(searchParams.entries());
+    // Add search params to debug info
+    const paramEntries = Array.from(searchParams.entries());
+    setDebugInfo(prev => ({
+      ...prev,
+      searchParams: Object.fromEntries(paramEntries) 
+    }));
+
+    // If user directly accessed this page (e.g. bookmark), we'll show success
+    // This helps prevent confusion when users revisit this page
+    const directAccess = document.referrer === '';
+    setIsDirectAccess(directAccess);
+    setDebugInfo(prev => ({
+      ...prev,
+      isDirectAccess: directAccess
+    }));
+  }, [searchParams]);
+
+  // If verification was successful, countdown to redirect
+  useEffect(() => {
+    if (isSuccess && countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (isSuccess && countdown === 0) {
+      router.push('/login?verified=true');
+    }
+  }, [isSuccess, countdown, router]);
+
+  // Get params from URL and verify token on component mount
+  useEffect(() => {
     const token = searchParams.get('token');
-    const tokenHash = searchParams.get('token_hash') || hashParams.token_hash;
-    const code = searchParams.get('code');
-    const type = searchParams.get('type') || 'signup';
     const email = searchParams.get('email');
+    const type = searchParams.get('type') || 'signup';
+    const code = searchParams.get('code');
+    const tokenHash = searchParams.get('token_hash'); // Legacy support
     
-    setDebugInfo({
-      url: typeof window !== 'undefined' ? window.location.href : 'No window',
-      params,
-      token,
-      tokenHash,
-      code,
-      type,
-      email,
-      hash: typeof window !== 'undefined' ? window.location.hash : 'No window',
-    });
-
-    console.log('All URL data:', {
-      params,
-      token,
-      tokenHash,
-      code,
-      type,
-      email,
-      hash: typeof window !== 'undefined' ? window.location.href : 'No window',
-    });
-
-    // Check if this is a direct access to the page (e.g., "verify email" button clicked)
-    const isDirectAccess = !token && !tokenHash && !code && 
-      !hashParams.token && !hashParams.token_hash && !hashParams.code;
+    console.log('Verification params received:', { token, email, type, code, tokenHash });
 
     // Determine which token and verification method to use
     if (code) {
@@ -124,7 +133,7 @@ function VerifyEmailContent() {
       setIsLoading(false);
       setError('No verification token found in the URL. Please check your email and click the link again.');
     }
-  }, [searchParams, hashParams, router]);
+  }, [searchParams, hashParams, router, isDirectAccess]);
 
   const verifyWithToken = async (token: string, email: string, type: 'signup' | 'recovery' | 'email_change') => {
     try {
@@ -202,7 +211,9 @@ function VerifyEmailContent() {
         setIsLoading(false);
       } else {
         // Special case: if the error is 'already confirmed', treat it as success
-        if (data.error === 'already confirmed' || data.message?.includes('already confirmed')) {
+        if (data.error === 'already confirmed' || 
+            data.message?.includes('already confirmed') || 
+            data.error?.includes('already confirmed')) {
           setIsSuccess(true);
           setIsLoading(false);
         } else {
@@ -218,7 +229,20 @@ function VerifyEmailContent() {
   const handleVerificationError = (error: any) => {
     console.error('Error verifying email:', error);
     setDebugInfo(prev => ({...prev, verificationError: error}));
-    setError('An unexpected error occurred. Please try again or contact support.');
+    
+    // Check for special cases like "User already confirmed"
+    let errorMessage = 'An unexpected error occurred. Please try again or contact support.';
+    
+    if (typeof error === 'object' && error !== null) {
+      if (error.message && error.message.toLowerCase().includes('already confirmed')) {
+        setIsSuccess(true);
+        setIsLoading(false);
+        return;
+      }
+      errorMessage = error.message || errorMessage;
+    }
+    
+    setError(errorMessage);
     setIsLoading(false);
   };
 
