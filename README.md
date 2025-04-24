@@ -1,68 +1,52 @@
-# Course Central
+# 📚 CourseCentralQU – Webapp
 
-An AI-powered course planning tool for university students.
+The webapp code for CourseCentralQU, a course insights platform built for Queen's University students. This repository powers the data collection layer for a system that:
 
-## Getting Started
+- Displays **historic grade distribution data** for courses.
+- Hosts a **RAG-powered chatbot** trained on real student feedback from Reddit and RateMyProfessors.
 
-First, run the development server:
+The chatbot enables Queen’s students to get honest, up-to-date insights on courses and instructors — beyond just what's in the calendar.
+
+---
+
+## 📦 Related Repositories
+
+This project is split across multiple repositories:
+
+| Repository | Purpose |
+|-----------|---------|
+| [CourseCentralQU-Scrapers](https://github.com/CourseCentralQU/CourseCentral-Scrapers) | Handles scraping data from Queen’s calendar, Reddit, and RateMyProf |
+| **CourseCentralQU-RAG** (🚧 under construction) | Fine-tunes embeddings and manages vector DB for retrieval |
+| [CourseCentralQU-Web](https://github.com/CourseCentralQU/CourseCentral-WebApp) | Frontend built in Next.js for the public-facing site |
+
+> 🔗 Live Website: [CourseCentralQU](https://course-central-web-1p9pc64uw-amaans-projects-0cfc711a.vercel.app/)
+
+---
+
+## 🛠️ Tech Stack
+
+This web application is built with:
+
+- **Next.js** – React framework for fast, scalable web development
+- **Tailwind CSS** – Utility-first CSS framework for rapid UI styling
+- **TypeScript** – Ensures robust typing and better dev experience
+- **Supabase** – Handles the PostgreSQL database and auth
+- **Vercel** – Deploys and hosts the web app
+
+---
+
+## ⚙️ Key Features
+
+- 🔍 **Course Search** – Search Queen’s University courses and view historical grade data
+- 💬 **AI Chatbot (RAG)** – Ask questions about courses and professors based on scraped reviews
+- 📈 **Grade Distributions** – Quickly visualize historical grade stats per course
+
+---
+
+## 🚀 Setup & Development
+
+1. Clone the repository:
 
 ```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Environment Variables
-
-Create a `.env.local` file in the root directory with the following variables:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-## Deploy on Vercel
-
-### Option 1: Deploy via Vercel Dashboard (Recommended)
-
-1. Push your changes to a GitHub repository
-2. Go to [Vercel](https://vercel.com/) and sign in
-3. Click "Add New..." → "Project"
-4. Select your GitHub repository
-5. Configure the project:
-   - Framework Preset: Next.js
-   - Root Directory: CourseCentral-WebApp/
-   - Build Command: npm run vercel-build
-   - Output Directory: .next
-   - Install Command: npm install
-6. Add the environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
-7. Click "Deploy"
-
-### Option 2: Deploy via Vercel CLI
-
-1. Install the Vercel CLI: `npm install -g vercel`
-2. Navigate to the project directory
-3. Run `vercel` to deploy
-4. Follow the prompts to configure your project
-
-## Troubleshooting Deployment Issues
-
-If you encounter issues during deployment:
-
-1. Check that environment variables are correctly set in Vercel
-2. Ensure Node.js version is set to 18.x or higher
-3. If build fails, check the Vercel build logs for specific errors
-4. TypeScript and ESLint errors are already configured to be ignored during builds
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+git clone https://github.com/your-username/CourseCentralQU-Web.git
+cd CourseCentralQU-Web
