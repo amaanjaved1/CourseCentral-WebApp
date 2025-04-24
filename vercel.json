@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "chmod +x vercel-build.sh && ./vercel-build.sh",
   "framework": "nextjs",
   "regions": ["iad1"]
 } 
