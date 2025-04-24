@@ -30,8 +30,15 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files and secrets - NEVER commit these!
+.env
+.env.*
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+!env.example
 
 # vercel
 .vercel
@@ -39,3 +46,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE/Editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+logs
+*.log
+
+# OS files
+._*
+Thumbs.db
+
+# Local configuration files that might contain secrets
+config.local.js
+**/config/local*
+*secrets*
