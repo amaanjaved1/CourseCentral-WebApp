@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import Image from 'next/image';
 
-export default function VerificationSuccessPage() {
+// Inner component that uses searchParams
+function VerificationSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const redirectTo = searchParams.get('redirect_to') || '/';
@@ -194,5 +195,21 @@ export default function VerificationSuccessPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+// Main component wrapped in Suspense
+export default function VerificationSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-pulse text-center">
+          <div className="mx-auto w-24 h-24 border-t-4 border-green-500 border-solid rounded-full animate-spin mb-6"></div>
+          <p className="text-gray-600">Loading verification success...</p>
+        </div>
+      </div>
+    }>
+      <VerificationSuccessContent />
+    </Suspense>
   );
 } 

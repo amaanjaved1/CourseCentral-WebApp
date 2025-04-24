@@ -1,9 +1,7 @@
-import type { NextConfig } from "next";
-
 /**
  * Next.js configuration with proper settings to ignore ESLint and TypeScript errors during build
  */
-const nextConfig: NextConfig = {
+const nextConfig = {
   /* config options here */
   output: 'standalone',
   eslint: {
@@ -17,4 +15,4 @@ const nextConfig: NextConfig = {
   // Additional configuration options can be added here as needed
 };
 
-export default nextConfig;
+export default nextConfig; 

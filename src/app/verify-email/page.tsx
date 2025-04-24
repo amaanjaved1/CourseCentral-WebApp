@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 
-export default function VerifyEmailPage() {
+// Inner component that uses searchParams
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -248,14 +249,22 @@ export default function VerifyEmailPage() {
               </svg>
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Email Verified!</h1>
-            <p className="text-gray-600 mb-4">Your email has been successfully verified.</p>
-            <p className="text-gray-600 mb-4">You will be redirected to login in {countdown} seconds...</p>
-            <div className="mt-6">
-              <Link 
-                href="/login?verified=true" 
-                className="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-md shadow-md transition duration-150 ease-in-out w-full"
+            <p className="text-gray-600 mb-6">Your email has been successfully verified. You can now proceed to sign in.</p>
+            
+            <div className="bg-blue-50 p-4 rounded-lg mb-6">
+              <p className="text-sm text-blue-600">Redirecting you to the login page in <span className="font-bold">{countdown}</span> seconds...</p>
+            </div>
+            
+            <div className="space-y-3">
+              <button
+                onClick={() => router.push('/login?verified=true')}
+                className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
               >
-                Login Now
+                Go to Login Now
+              </button>
+              
+              <Link href="/" className="inline-block text-blue-600 hover:underline">
+                Return to Home
               </Link>
             </div>
           </div>
@@ -264,40 +273,75 @@ export default function VerifyEmailPage() {
     );
   }
 
+  // If there was an error
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navigation />
-      <main className="flex-grow flex items-center justify-center px-4">
-        <div className="max-w-md w-full mx-auto text-center p-6 rounded-lg shadow-lg bg-white">
+      <main className="flex-grow flex items-center justify-center px-4 py-8">
+        <div className="max-w-md w-full mx-auto p-6 rounded-lg shadow-lg bg-white border border-gray-100">
           <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Verification Failed</h1>
-          <p className="text-gray-600 mb-4">
-            {error || 'We couldn\'t verify your email. The link may have expired or been used already.'}
-          </p>
-          <div className="flex flex-col space-y-3">
-            <Link href="/login" className="inline-block bg-tricolore-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
-              Go to Login
-            </Link>
-            <Link href="/signup" className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
-              Try Signing Up Again
-            </Link>
+          
+          <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Verification Failed</h1>
+          <div className="bg-red-50 p-4 rounded-lg border border-red-100 mb-6">
+            <p className="text-red-800">{error}</p>
           </div>
           
-          {/* Uncomment for debugging */}
-          {/*
-          <div className="mt-8 text-left border-t pt-4">
-            <h3 className="font-bold mb-2">Debug Information:</h3>
-            <pre className="bg-gray-100 p-2 rounded text-xs overflow-auto max-h-64">
-              {JSON.stringify(debugInfo, null, 2)}
-            </pre>
+          <div className="space-y-4">
+            <Link 
+              href="/login"
+              className="block w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-center"
+            >
+              Go to Login
+            </Link>
+            
+            <div className="p-4 rounded-lg bg-gray-50">
+              <h3 className="font-medium text-gray-900 mb-2">Having trouble?</h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="/auth/confirmation" className="text-blue-600 hover:underline">
+                    Check verification status
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/signup" className="text-blue-600 hover:underline">
+                    Try signing up again
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-          */}
+          
+          {/* Debug information, hidden in production */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-8 text-xs text-gray-500 border-t pt-4">
+              <p className="font-bold mb-1">Debug info:</p>
+              <pre className="bg-gray-100 p-2 rounded overflow-auto max-h-40">
+                {JSON.stringify(debugInfo, null, 2)}
+              </pre>
+            </div>
+          )}
         </div>
       </main>
     </div>
+  );
+}
+
+// Main component wrapped in Suspense
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-pulse text-center">
+          <div className="mx-auto w-24 h-24 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-6"></div>
+          <p className="text-gray-600">Loading verification page...</p>
+        </div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 } 

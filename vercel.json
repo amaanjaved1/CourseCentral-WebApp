@@ -3,6 +3,5 @@
   "buildCommand": "chmod +x vercel-build.sh && ./vercel-build.sh",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "ignoreCommand": "echo 'Skipping linting checks'"
+  "regions": ["iad1"]
 } 
