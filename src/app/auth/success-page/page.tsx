@@ -2,27 +2,8 @@
 
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import { useEffect, useState } from 'react';
 
 export default function StandaloneSuccessPage() {
-  const [countdown, setCountdown] = useState(5);
-
-  useEffect(() => {
-    // Start countdown to auto-redirect
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          window.location.href = '/login?verified=true';
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navigation />
@@ -79,17 +60,13 @@ export default function StandaloneSuccessPage() {
               </ul>
             </div>
             
-            <div className="text-center animate-fade-in delay-450">
-              <p className="text-sm text-gray-500 mb-4">
-                Redirecting to login in {countdown} seconds...
-              </p>
-              
+            <div className="text-center animate-fade-in delay-450">              
               <div className="flex flex-col space-y-4">
                 <Link
-                  href="/login?verified=true"
+                  href="/login"
                   className="px-4 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors text-center transform hover:scale-105 transition-transform"
                 >
-                  Log in now
+                  Go to Login
                 </Link>
                 <Link
                   href="/"

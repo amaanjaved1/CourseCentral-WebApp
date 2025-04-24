@@ -4,6 +4,11 @@
   "outputDirectory": ".next",
   "regions": ["iad1"],
   "installCommand": "npm install",
+  "env": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://kpjnsppbmyfrchhbnnjd.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwam5zcHBibXlmcmNoaGJubmpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NzE5NjEsImV4cCI6MjA2MDI0Nzk2MX0._dQiEyVbqG9bf7vC8CVrodrV773_DqD3r-9ttH9CvWw"
+  },
   "github": {
     "silent": true
   }
