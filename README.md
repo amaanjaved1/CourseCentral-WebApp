@@ -40,8 +40,6 @@ This web application is built with:
 - 🔍 **Course Search** – Search Queen’s University courses and view historical grade data
 - 💬 **AI Chatbot (RAG)** – Ask questions about courses and professors based on scraped reviews
 - 📈 **Grade Distributions** – Quickly visualize historical grade stats per course
-- 🧠 **Semantic Search (Upcoming)** – Improve search results using course context
-- 🧪 **Student Review Layer (Planned)** – Add your own reviews to the database
 
 ---
 
