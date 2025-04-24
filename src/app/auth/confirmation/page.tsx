@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import ResendVerification from '@/components/auth/ResendVerification';
 
-export default function ConfirmationPage() {
+// Inner component that uses searchParams
+function ConfirmationContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const status = searchParams.get('status');
@@ -117,5 +118,21 @@ export default function ConfirmationPage() {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00305f]/5 rounded-full blur-3xl"></div>
       </div>
     </div>
+  );
+}
+
+// Main component wrapped in Suspense
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-pulse text-center">
+          <div className="mx-auto w-24 h-24 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-6"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ConfirmationContent />
+    </Suspense>
   );
 } 

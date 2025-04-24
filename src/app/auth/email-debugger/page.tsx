@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function EmailDebuggerPage() {
+// Inner component that uses searchParams
+function EmailDebuggerContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [urlInfo, setUrlInfo] = useState<{
@@ -108,5 +109,21 @@ export default function EmailDebuggerPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component wrapped in Suspense
+export default function EmailDebuggerPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-pulse text-center">
+          <div className="mx-auto w-24 h-24 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-6"></div>
+          <p className="text-gray-600">Loading debugger...</p>
+        </div>
+      </div>
+    }>
+      <EmailDebuggerContent />
+    </Suspense>
   );
 } 
