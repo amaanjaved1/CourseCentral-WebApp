@@ -1,3 +1,10 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": ".next",
+  "regions": ["iad1"],
+  "installCommand": "npm install",
+  "github": {
+    "silent": true
+  }
 } 

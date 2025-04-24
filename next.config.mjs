@@ -1,5 +1,5 @@
 /**
- * Next.js configuration with proper settings to ignore ESLint and TypeScript errors during build
+ * Next.js configuration optimized for Vercel deployment
  */
 const nextConfig = {
   /* config options here */
@@ -12,6 +12,22 @@ const nextConfig = {
     // Don't run type checking during builds
     ignoreBuildErrors: true,
   },
+  // Increase memory limit for builds
+  experimental: {
+    serverMinification: true,
+    serverSourceMaps: false,
+  },
+  // Setting strict mode for React
+  reactStrictMode: true,
+  // Add image domains if needed
+  images: {
+    // Add any domains you need to load images from
+    domains: [],
+    // Set reasonable image sizes
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+  },
+  // Disable x-powered-by header for security
+  poweredByHeader: false,
   // Additional configuration options can be added here as needed
 };
 
