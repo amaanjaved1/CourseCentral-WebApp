@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
+import UserAvatar from './UserAvatar';
 
 // Desktop navigation link with animation
 function NavLink({ href, label }: { href: string; label: string }) {
@@ -142,9 +143,7 @@ export default function Navigation() {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center space-x-2 focus:outline-none"
                 >
-                  <div className="w-8 h-8 rounded-full bg-[#00305f] flex items-center justify-center text-white text-xs font-medium">
-                    Me
-                  </div>
+                  <UserAvatar size="sm" />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${userMenuOpen ? 'transform rotate-180' : ''}`}
@@ -200,8 +199,8 @@ export default function Navigation() {
           <div className="md:hidden flex items-center">
             {!isLoading && user && (
               <div className="mr-2">
-                <Link href="/account" className="w-8 h-8 rounded-full bg-[#00305f] flex items-center justify-center text-white text-xs font-medium">
-                  Me
+                <Link href="/account">
+                  <UserAvatar size="sm" />
                 </Link>
               </div>
             )}
