@@ -64,7 +64,7 @@ export default function AccountPage() {
                     {user?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-[#00305f]">{user?.email}</h2>
+                    <h2 className="text-xl font-semibold text-[#00305f]">me</h2>
                     <p className="text-sm text-gray-600">Queen's University Account</p>
                   </div>
                 </div>
