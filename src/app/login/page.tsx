@@ -9,7 +9,7 @@ import { isQueensEmail, isValidEmail } from '@/utils/validation';
 
 // Separate component to handle searchParams
 function LoginContent() {
-  const { signIn } = useAuth();
+  const { signIn, user, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
@@ -18,8 +18,15 @@ function LoginContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showVerificationSuccess, setShowVerificationSuccess] = useState(verified);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push('/');
+    }
+  }, [user, isLoading, router]);
 
   // Clear verification success message after some time
   useEffect(() => {
@@ -34,24 +41,24 @@ function LoginContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError(null);
 
     if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields');
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
     if (!isValidEmail(email)) {
       setError('Please enter a valid email address');
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
     
     if (!isQueensEmail(email)) {
       setError('Only @queensu.ca email addresses are allowed');
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
@@ -67,7 +74,7 @@ function LoginContent() {
     } catch (error: any) {
       setError(error.message || 'Something went wrong');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -168,12 +175,12 @@ function LoginContent() {
                 
                 <button
                   type="submit"
-                  disabled={isLoading || !isQueensEmail(email)}
+                  disabled={isSubmitting || !isQueensEmail(email)}
                   className={`w-full py-3 bg-gradient-to-r from-[#00305f] to-[#00305f]/90 text-white font-medium rounded-lg transition-colors shadow-md hover:from-[#00305f]/90 hover:to-[#00305f]/80 ${
-                    (isLoading || !isQueensEmail(email)) ? 'opacity-70 cursor-not-allowed' : ''
+                    (isSubmitting || !isQueensEmail(email)) ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                 >
-                  {isLoading ? 'Signing in...' : 'Sign in'}
+                  {isSubmitting ? 'Signing in...' : 'Sign in'}
                 </button>
               </form>
               
