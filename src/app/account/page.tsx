@@ -61,7 +61,7 @@ export default function AccountPage() {
               <div className="p-6 bg-[#00305f]/5 border-b border-gray-200">
                 <div className="flex items-center space-x-4">
                   <div className="w-16 h-16 rounded-full bg-[#00305f] flex items-center justify-center text-white text-xl font-medium">
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
+                    me
                   </div>
                   <div>
                     <h2 className="text-xl font-semibold text-[#00305f]">{user?.email}</h2>
