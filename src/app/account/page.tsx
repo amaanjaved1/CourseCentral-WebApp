@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import Navigation from '@/components/Navigation';
 import AuthGate from '@/components/auth/AuthGate';
+import UserAvatar from '@/components/UserAvatar';
 
 export default function AccountPage() {
   const { user, signOut, isLoading } = useAuth();
@@ -60,9 +61,7 @@ export default function AccountPage() {
             <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
               <div className="p-6 bg-[#00305f]/5 border-b border-gray-200">
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 rounded-full bg-[#00305f] flex items-center justify-center text-white text-xl font-medium">
-                    me
-                  </div>
+                  <UserAvatar size="lg" />
                   <div>
                     <h2 className="text-xl font-semibold text-[#00305f]">me</h2>
                     <p className="text-sm text-gray-600">Queen's University Account</p>

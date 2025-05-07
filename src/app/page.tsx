@@ -163,7 +163,7 @@ export default function Home() {
             <div className="max-w-xl">
               <h1 className="relative text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00305f] to-[#00305f]/90">
-                  AI-powered insights for
+                  AI-Powered insights for
                 </span>
                 <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#d62839] to-[#a31e36]">
                   smarter course decisions
