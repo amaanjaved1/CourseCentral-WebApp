@@ -57,7 +57,7 @@ export default function QueensAnswers() {
         <div className="w-full max-w-2xl flex flex-col items-center">
           {/* Header */}
           <h1 className="text-5xl font-extrabold text-center mb-3 tracking-tight animated-title">
-            <span className="gradient-text">queen's answers</span>
+            <span className="gradient-text">Queen's Answers</span>
           </h1>
           <p className="text-xl font-semibold text-center mb-10 text-[#00305f] max-w-2xl">
             Got a question? Ask it and get answers, perspectives, and recommendations from all of Queen's
