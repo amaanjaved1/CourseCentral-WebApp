@@ -1,222 +1,372 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navigation from '@/components/Navigation';
-import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 
-export default function AIFeatures() {
-  const { user, isLoading } = useAuth();
-  const isLoggedIn = !!user;
-  const [showAccessModal, setShowAccessModal] = useState(false);
-  const [hasUploaded, setHasUploaded] = useState(false);
+export default function QueensAnswers() {
+  const [question, setQuestion] = useState("");
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const controls = useAnimation();
   
+  // Sample questions with emojis
+  const sampleQuestions = [
+    { emoji: "📊", text: "best electives for first-years" },
+    { emoji: "🧑‍🏫", text: "easiest profs for MATH 121" },
+    { emoji: "💬", text: "professor reviews for PSYC 100" },
+    { emoji: "📈", text: "grade distribution for BIOL 102" },
+    { emoji: "🕒", text: "average workload for CHEM 112" },
+    { emoji: "🏆", text: "courses with highest average" },
+    { emoji: "👨‍🎓", text: "best profs for CISC 124" },
+    { emoji: "🔍", text: "hidden gem electives" },
+    { emoji: "🗣️", text: "prof teaching style for COMM 151" },
+    { emoji: "💡", text: "tips for surviving ENGL 100" },
+    { emoji: "🧑‍🤝‍🧑", text: "group project courses" },
+    { emoji: "🧑‍🏫", text: "strictest graders" },
+  ];
+  
+  // Duplicate the array to create a seamless loop effect
+  const duplicatedQuestions = [...sampleQuestions, ...sampleQuestions, ...sampleQuestions];
+  
+  // Set up continuous animation
   useEffect(() => {
-    // Check if user has uploaded a distribution when component mounts
-    // or when user authentication state changes
-    if (typeof window !== 'undefined' && isLoggedIn) {
-      const hasUploadedValue = localStorage.getItem('courseDistributionUploaded');
-      setHasUploaded(hasUploadedValue === 'true');
-    }
-  }, [isLoggedIn]);
-  
-  const handleChatInteraction = () => {
-    if (!isLoggedIn) {
-      setShowAccessModal(true);
-    }
-  };
-  
-  const closeModal = () => {
-    setShowAccessModal(false);
-  };
-  
+    const startAnimation = async () => {
+      await controls.start({
+        x: [0, -3000],
+        transition: { 
+          duration: 60,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop"
+        }
+      });
+    };
+    
+    startAnimation();
+    
+    return () => {
+      controls.stop();
+    };
+  }, [controls]);
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navigation />
-      
-      <main className="flex-grow px-4 py-6 flex flex-col">
-        <div className="max-w-3xl mx-auto w-full">
-          {/* Header - Simple and clean */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-[#00305f]">AI Course Assistant</h1>
-            <div className="w-16 h-1 bg-[#d62839] rounded-full mx-auto my-3"></div>
-            <p className="text-gray-600 text-sm">
-              Get answers about Queen's courses, professors, and grade distributions.
-            </p>
-          </div>
-          
-          {/* Chat Interface - Visible to everyone */}
-          <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-6">
-            {/* Chat header */}
-            <div className="bg-[#00305f] px-5 py-3">
-              <h2 className="text-white font-medium">Course Assistant Chat</h2>
-            </div>
+      <main className="flex-grow flex flex-col items-center justify-center px-4 py-12">
+        <div className="w-full max-w-2xl flex flex-col items-center">
+          {/* Header */}
+          <h1 className="text-5xl font-extrabold text-center mb-3 tracking-tight animated-title">
+            <span className="gradient-text">queen's answers</span>
+          </h1>
+          <p className="text-xl font-semibold text-center mb-10 text-[#00305f] max-w-2xl">
+            Got a question? Ask it and get answers, perspectives, and recommendations from all of Queen's
+          </p>
+
+          {/* Continuous Carousel */}
+          <div 
+            className="w-full mb-8 overflow-hidden relative carousel-container" 
+            ref={containerRef}
+          >
+            {/* Light gradient overlays for smooth edge fading */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10"></div>
             
-            {/* Chat content area */}
-            <div className="bg-gray-50 h-72 p-4 overflow-y-auto">
-              <div className="flex items-start">
-                <div className="w-8 h-8 rounded-full bg-[#d62839] flex-shrink-0 flex items-center justify-center text-white">
-                  AI
-                </div>
-                <div className="ml-3 bg-white rounded-lg p-3 shadow-sm max-w-3xl">
-                  <p className="text-gray-800">
-                    Hello! I'm your Queen's University course assistant. Ask me anything about courses, professors, or grade distributions.
-                  </p>
-                </div>
-              </div>
-              
-              {!isLoggedIn && (
-                <div className="flex items-center bg-blue-50 p-3 rounded-lg mt-4 border border-blue-100">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="text-sm text-blue-700">
-                    You need to sign in to use the AI Assistant.
-                    <span className="block mt-1 text-xs text-blue-600">Click in the textbox below to get started.</span>
-                  </p>
-                </div>
-              )}
-            </div>
-            
-            {/* Chat input */}
-            <div className="px-4 py-3 border-t border-gray-200">
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  placeholder="Ask about a course or professor..."
-                  className="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#00305f] focus:border-[#00305f]"
-                  onFocus={handleChatInteraction}
-                  onClick={handleChatInteraction}
-                />
-                <button 
-                  className="ml-2 px-4 py-2 bg-[#d62839] text-white font-medium rounded-lg"
-                  onClick={handleChatInteraction}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {/* Course Distribution Contribution Callout */}
-          {isLoggedIn && (
-            <div className="mb-6 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100">
-              <h3 className="text-[#00305f] font-medium mb-2">Help Fellow Students</h3>
-              <p className="text-gray-700 text-sm mb-3">
-                Consider uploading your course distributions to help improve recommendations for the Queen's community.
-              </p>
-              <Link
-                href="/add-courses"
-                className="inline-block bg-[#00305f] hover:bg-[#00305f]/90 text-white text-sm font-medium py-1.5 px-3 rounded-lg transition-colors"
-              >
-                Upload Course Distribution
-              </Link>
-            </div>
-          )}
-          
-          {/* Sample questions */}
-          <div>
-            <h3 className="text-center text-[#00305f] font-medium mb-3">Try asking about:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <p className="font-medium text-[#d62839] text-sm">Course difficulty</p>
-                <p className="text-gray-600 text-xs">"How difficult is CISC 121 compared to CISC 124?"</p>
-              </div>
-              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <p className="font-medium text-[#d62839] text-sm">Professor information</p>
-                <p className="text-gray-600 text-xs">"Who are the best professors for COMM 151?"</p>
-              </div>
-              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <p className="font-medium text-[#d62839] text-sm">Grade distributions</p>
-                <p className="text-gray-600 text-xs">"What's the typical grade distribution for PSYC 100?"</p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Access Modal - Modal with Tailwind transition */}
-          {showAccessModal && (
-            <div 
-              className="fixed inset-0 z-50 flex items-center justify-center"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  closeModal();
-                }
-              }}
+            <motion.div 
+              className="flex gap-4 px-4"
+              animate={controls}
+              style={{ width: "max-content" }}
             >
-              <div 
-                className="bg-white rounded-lg shadow-lg max-w-md w-full m-4 border border-gray-200 transform transition-all duration-300 ease-in-out"
-                style={{ 
-                  animation: "0.3s ease-out 0s 1 normal forwards running modalEntrance" 
-                }}
-              >
-                <div className="p-5">
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-lg font-semibold text-[#00305f]">Access the AI Assistant</h3>
-                    <button 
-                      onClick={closeModal}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <div className="space-y-3 mb-5">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-6 w-6 rounded-full bg-[#d62839] flex items-center justify-center text-white font-medium text-sm mr-3">
-                        1
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-800">Sign in with your account</p>
-                      </div>
+              {duplicatedQuestions.map((q, i) => (
+                <motion.button
+                  key={i}
+                  type="button"
+                  tabIndex={0}
+                  onClick={() => setQuestion(q.text)}
+                  className="carousel-item flex items-center bg-white border border-gray-200 rounded-full px-6 py-3 text-base font-medium shadow-sm text-[#00305f] whitespace-nowrap"
+                  style={{lineHeight: '1.2'}}
+                  aria-label={q.text}
+                  whileHover={{ 
+                    scale: 1.06, 
+                    y: -4,
+                    boxShadow: "0 0 20px rgba(214, 40, 57, 0.3)",
+                    borderColor: "#d62839",
+                    zIndex: 20,
+                    color: "#d62839",
+                    backgroundColor: "rgba(255, 255, 255, 0.99)"
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 20,
+                    mass: 0.9
+                  }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <span className="mr-2 text-lg">{q.emoji}</span>
+                  {q.text}
+                </motion.button>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* How it works link */}
+          <button
+            type="button"
+            onClick={() => setShowHowItWorks(true)}
+            className="text-[#00305f] underline text-base mb-16 hover:text-[#d62839] transition cursor-pointer"
+            style={{background: 'none', border: 'none', padding: 0}}
+          >
+            Learn how Queen's Answers works &gt;
+          </button>
+
+          {/* How it works modal */}
+          {showHowItWorks && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 modal-backdrop" onClick={e => { if (e.target === e.currentTarget) setShowHowItWorks(false); }}>
+              <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative modal-content">
+                <button
+                  className="absolute top-4 right-4 text-gray-400 hover:text-[#d62839] text-2xl font-bold"
+                  onClick={() => setShowHowItWorks(false)}
+                  aria-label="Close"
+                >
+                  &times;
+                </button>
+                <h2 className="text-2xl font-bold text-[#d62839] mb-4 text-center">How Queen's Answers Works</h2>
+                <ul className="space-y-5 mt-6">
+                  <li className="flex items-start">
+                    <span className="text-2xl mr-3">🔎</span>
+                    <div>
+                      <span className="font-semibold text-[#00305f]">Ask anything about Queen's courses or professors.</span>
+                      <div className="text-gray-600 text-sm">Type your question in the box below—no question is too specific!</div>
                     </div>
-                  </div>
-                  
-                  <p className="text-gray-600 text-sm mb-4">
-                    Sign in to access the AI Course Assistant and get personalized help with your courses.
-                  </p>
-                  
-                  <div className="space-y-3">
-                    <Link
-                      href="/signup"
-                      className="bg-[#d62839] hover:bg-[#c61e29] text-white font-medium py-2 px-4 rounded-lg transition-colors w-full block text-center"
-                    >
-                      Sign Up Now
-                    </Link>
-                    <Link
-                      href="/login"
-                      className="text-[#00305f] hover:text-[#00305f]/80 font-medium py-2 px-4 rounded-lg transition-colors w-full block text-center"
-                    >
-                      Already have an account? Sign In
-                    </Link>
-                  </div>
-                </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-2xl mr-3">🤖</span>
+                    <div>
+                      <span className="font-semibold text-[#00305f]">Get instant, AI-powered answers.</span>
+                      <div className="text-gray-600 text-sm">Our system searches real student reviews, grade data, and more to give you the best info.</div>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-2xl mr-3">💬</span>
+                    <div>
+                      <span className="font-semibold text-[#00305f]">See perspectives from Reddit and RateMyProf.</span>
+                      <div className="text-gray-600 text-sm">We pull in the most relevant, up-to-date student experiences for Queen's.</div>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-2xl mr-3">🎯</span>
+                    <div>
+                      <span className="font-semibold text-[#00305f]">Make smarter course decisions.</span>
+                      <div className="text-gray-600 text-sm">Use what you learn to pick the best courses and professors for you!</div>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
           )}
         </div>
+
+        {/* Ask a Question Input at the bottom */}
+        <form
+          className={`fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-xl flex items-center bg-[#f5f6f7] rounded-full px-4 py-3 shadow-lg transition-all duration-300 ${
+            showHowItWorks ? 'opacity-30 pointer-events-none' : 'opacity-100 hover:shadow-xl'
+          }`}
+          style={{zIndex: 50}}
+          onSubmit={e => {
+            e.preventDefault();
+            // handle question submit
+          }}
+        >
+          <input
+            type="text"
+            className="flex-grow bg-transparent outline-none px-2 py-2 text-lg placeholder:text-[#b0b3b8] placeholder:font-medium"
+            placeholder="Ask a question"
+            value={question}
+            onChange={e => setQuestion(e.target.value)}
+            style={{color: '#222'}}
+            disabled={showHowItWorks}
+          />
+          <button
+            type="submit"
+            className="ml-2 bg-[#d62839] hover:bg-[#a31e36] text-white rounded-full w-12 h-10 flex items-center justify-center font-semibold text-lg transition-all duration-300 ease-in-out shadow hover:shadow-lg hover:scale-105"
+            style={{minWidth: '48px'}}
+            disabled={showHowItWorks}
+          >
+            &gt;
+          </button>
+        </form>
       </main>
-      
-      {/* Simple subtle background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* Subtle background accents */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#d62839]/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00305f]/5 rounded-full blur-3xl"></div>
       </div>
-      
-      {/* Animation keyframes */}
-      <style jsx global>{`
-        @keyframes modalEntrance {
+      {/* All styles in one place */}
+      <style jsx>{`
+        .carousel-container {
+          position: relative;
+          margin: 0 auto;
+          overflow: hidden;
+          padding: 12px 0;
+          border-radius: 8px;
+        }
+        
+        .carousel-item {
+          position: relative;
+          transition-property: transform, box-shadow, border-color, color, background-color;
+          transition-duration: 0.35s;
+          transition-timing-function: cubic-bezier(0.2, 0.85, 0.3, 1.1);
+          transform-origin: center;
+          will-change: transform, box-shadow, border-color;
+          margin: 0 3px;
+          backface-visibility: hidden;
+          -webkit-font-smoothing: subpixel-antialiased;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+          border: 1px solid #e5e7eb;
+          overflow: hidden;
+        }
+        
+        .carousel-item:hover {
+          z-index: 20;
+          transform: translateY(-4px) scale(1.06);
+          animation: elegantGlow 2s infinite alternate;
+          border-color: #d62839;
+          color: #d62839;
+        }
+        
+        .carousel-item:hover::before {
+          content: '';
+          position: absolute;
+          top: -2px;
+          left: -2px;
+          right: -2px;
+          bottom: -2px;
+          z-index: -1;
+          border-radius: 9999px;
+          background: radial-gradient(circle at center, rgba(214, 40, 57, 0.05) 0%, rgba(214, 40, 57, 0.01) 70%, transparent 100%);
+          animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes elegantGlow {
           0% {
-            opacity: 0;
-            transform: translateY(16px) scale(0.98);
+            box-shadow: 0 0 10px 2px rgba(214, 40, 57, 0.15), 
+                        0 2px 6px rgba(0, 0, 0, 0.08);
+          }
+          50% {
+            box-shadow: 0 0 15px 5px rgba(214, 40, 57, 0.25), 
+                        0 2px 8px rgba(0, 0, 0, 0.06);
           }
           100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+            box-shadow: 0 0 18px 4px rgba(214, 40, 57, 0.2), 
+                        0 3px 10px rgba(0, 0, 0, 0.07);
           }
+        }
+        
+        @keyframes pulseGlow {
+          0% {
+            opacity: 0.4;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.01);
+          }
+          100% {
+            opacity: 0.4;
+            transform: scale(1);
+          }
+        }
+        
+        .animated-title {
+          position: relative;
+          overflow: hidden;
+          padding: 0.2em 0;
+        }
+        
+        .gradient-text {
+          background: linear-gradient(
+            90deg, 
+            #d62839 0%, 
+            #e74c3c 15%, 
+            #d62839 30%, 
+            #a31e36 45%, 
+            #d62839 60%, 
+            #a31e36 75%, 
+            #d62839 100%
+          );
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+          animation: shine 8s linear infinite, float 3s ease-in-out infinite;
+          display: inline-block;
+          text-shadow: 0 0 3px rgba(214, 40, 57, 0.1);
+        }
+        
+        @keyframes shine {
+          to {
+            background-position: 200% center;
+          }
+        }
+        
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-3px);
+          }
+        }
+        
+        .animated-title::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #d62839, transparent);
+          animation: shimmer 3s infinite;
+          transform: translateX(-100%);
+          opacity: 0.2;
+        }
+        
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fadeInModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .modal-backdrop {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .modal-content {
+          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(40px) scale(0.96); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        @keyframes fadeInModal {
+          from { opacity: 0; transform: translateY(24px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
     </div>
