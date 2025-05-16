@@ -1,13 +1,31 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { Course, GradeDistribution, CourseWithStats } from '@/types';
 import { getCourses } from '@/lib/db';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Course, GradeDistribution, CourseWithStats } from '@/types';
+
+// Custom CSS for scrollbars
+const scrollbarStyles = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+`;
 
 // Course level options
 const COURSE_LEVELS = [
@@ -15,6 +33,39 @@ const COURSE_LEVELS = [
   { id: '200', label: '200 Level' },
   { id: '300', label: '300 Level' },
   { id: '400', label: '400 Level' },
+];
+
+// Department options
+const DEPARTMENTS = [
+  "All Departments",
+  "ENGL",
+  "CISC",
+  "COMM",
+  "PSYC",
+  "ECON",
+  "MATH",
+  "BIOL",
+  "CHEM",
+  "PHYS",
+  "HIST",
+  "POLS",
+  "GEOL",
+  "ANAT",
+  "FREN",
+  "SPAN",
+  "PHIL",
+  "GREK",
+  "MUSI",
+  "ASTR",
+  "STAT",
+  "RELS",
+  "FILM",
+  "GNDS",
+  "LANG",
+  "CLST",
+  "DRAM",
+  "MECH",
+  "ELEC"
 ];
 
 // Sort options
@@ -48,8 +99,10 @@ const getLetterGrade = (gpa: number): string => {
 };
 
 export default function QueensCourses() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('');
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [minGPA, setMinGPA] = useState(0);
   const [maxGPA, setMaxGPA] = useState(4.3);
@@ -62,6 +115,9 @@ export default function QueensCourses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [coursesWithStats, setCoursesWithStats] = useState<CourseWithStats[]>([]);
+  // Add state for dropdowns
+  const [courseLevelOpen, setCourseLevelOpen] = useState(false);
+  const [departmentOpen, setDepartmentOpen] = useState(false);
   
   // Fetch courses data from Supabase
   useEffect(() => {
@@ -71,6 +127,13 @@ export default function QueensCourses() {
         
         // Fetch all courses
         const coursesData = await getCourses();
+        
+        // Log sample course data to see structure
+        if (coursesData.length > 0) {
+          console.log('Sample course data:', coursesData[0]);
+          console.log('Department examples:', coursesData.slice(0, 5).map(c => c.department));
+          console.log('Course codes:', coursesData.slice(0, 5).map(c => c.course_code));
+        }
         
         // Use the data from Supabase, which should already include distributions and stats
         const processedCourses = coursesData.map(course => {
@@ -126,11 +189,59 @@ export default function QueensCourses() {
     return '100'; // Default
   };
   
+  // Extract department code from course code (e.g., "CISC 101" -> "CISC")
+  const getDepartmentFromCourseCode = (courseCode: string): string => {
+    const match = courseCode.match(/^([A-Z]+)/);
+    return match ? match[1] : '';
+  };
+  
   // Get unique departments for filter dropdown
   const departments = Array.from(
     new Set(coursesWithStats.map(course => course.department))
   ).sort();
   
+  // Handle department checkbox change
+  const handleDepartmentChange = (deptId: string) => {
+    setSelectedDepartments(prev => 
+      prev.includes(deptId)
+        ? prev.filter(id => id !== deptId)
+        : [...prev, deptId]
+    );
+  };
+
+  // Handle level checkbox change
+  const handleLevelChange = (levelId: string) => {
+    setSelectedLevels(prev => 
+      prev.includes(levelId)
+        ? prev.filter(id => id !== levelId)
+        : [...prev, levelId]
+    );
+  };
+
+  // Reset all filters
+  const resetFilters = () => {
+    setSearchTerm('');
+    setFilterDepartment('');
+    setSelectedDepartments([]);
+    setSelectedLevels([]);
+    setMinGPA(0);
+    setMaxGPA(4.3);
+    setMinEnrollment(0);
+    setMaxEnrollment(400);
+  };
+  
+  // Handle sorting
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Toggle direction if clicking on the same field
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new field and default to ascending
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
   // Filter courses based on all criteria
   const filteredCourses = coursesWithStats.filter(course => {
     // Filter by search term
@@ -138,8 +249,12 @@ export default function QueensCourses() {
       course.course_code.toLowerCase().includes(searchTerm.toLowerCase()) || 
       course.course_name.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Filter by department
-    const matchesDepartment = filterDepartment === '' || course.department === filterDepartment;
+    // Get the department code from the course code
+    const courseDeptCode = getDepartmentFromCourseCode(course.course_code);
+    
+    // Filter by department - match if no departments selected or if this course's department is in selected departments
+    const matchesDepartment = selectedDepartments.length === 0 || 
+      selectedDepartments.includes(courseDeptCode);
     
     // Filter by course level
     const courseLevel = getCourseLevel(course.course_code);
@@ -152,6 +267,11 @@ export default function QueensCourses() {
     // Filter by enrollment range
     const matchesEnrollment = !course.totalEnrollment || 
       (course.totalEnrollment >= minEnrollment && course.totalEnrollment <= maxEnrollment);
+    
+    // Log helpful information for debugging  
+    if (selectedDepartments.length > 0) {
+      console.log(`Course ${course.course_code} - Dept: ${courseDeptCode}, Match: ${matchesDepartment}`);
+    }
     
     return matchesSearch && matchesDepartment && matchesLevel && matchesGPA && matchesEnrollment;
   }).sort((a, b) => {
@@ -179,40 +299,9 @@ export default function QueensCourses() {
     return 0;
   });
 
-  // Handle level checkbox change
-  const handleLevelChange = (levelId: string) => {
-    setSelectedLevels(prev => 
-      prev.includes(levelId)
-        ? prev.filter(id => id !== levelId)
-        : [...prev, levelId]
-    );
-  };
-
-  // Reset all filters
-  const resetFilters = () => {
-    setSearchTerm('');
-    setFilterDepartment('');
-    setSelectedLevels([]);
-    setMinGPA(0);
-    setMaxGPA(4.3);
-    setMinEnrollment(0);
-    setMaxEnrollment(400);
-  };
-  
-  // Handle sorting
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      // Toggle direction if clicking on the same field
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      // Set new field and default to ascending
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f9fa]">
+      <style dangerouslySetInnerHTML={{ __html: scrollbarStyles }} />
       <Navigation />
       <main className="flex-grow container mx-auto py-6 px-4 md:py-10">
         {/* Modern Header with Gradient and Animation */}
@@ -300,38 +389,128 @@ export default function QueensCourses() {
                   
                   {/* Course Level Filter */}
                   <div className="p-5 border-b border-gray-100">
-                    <h3 className="font-medium mb-3 text-gray-700">Course Level</h3>
-                    <div className="space-y-2">
-                      {COURSE_LEVELS.map(level => (
-                        <div key={level.id} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id={`level-${level.id}`}
-                            checked={selectedLevels.includes(level.id)}
-                            onChange={() => handleLevelChange(level.id)}
-                            className="h-4 w-4 text-[#d62839] focus:ring-[#d62839] rounded"
-                          />
-                          <label htmlFor={`level-${level.id}`} className="ml-2 text-[#2d3748]">
-                            {level.label}
-                          </label>
-                        </div>
-                      ))}
+                    <div>
+                      <h3 className="font-medium mb-3 text-gray-700">Course Level</h3>
+                    </div>
+                    
+                    <div 
+                      className="relative"
+                      onClick={() => setCourseLevelOpen(!courseLevelOpen)}
+                    >
+                      <div className="w-full px-3 py-2 border border-gray-200 rounded-lg flex items-center justify-between bg-white cursor-pointer">
+                        <span className="text-[#2d3748]">
+                          {selectedLevels.length === 0 
+                            ? "All Levels" 
+                            : selectedLevels.length === 1 
+                              ? COURSE_LEVELS.find(l => l.id === selectedLevels[0])?.label 
+                              : `${selectedLevels.length} levels selected`
+                          }
+                        </span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className={`h-5 w-5 text-gray-500 transition-transform duration-300 ${courseLevelOpen ? 'rotate-180' : ''}`} 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    
+                      <AnimatePresence>
+                        {courseLevelOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute left-0 right-0 top-full mt-1 z-10"
+                          >
+                            <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden p-2">
+                              <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                                {COURSE_LEVELS.map(level => (
+                                  <div key={level.id} className="flex items-center p-1 hover:bg-gray-50 rounded">
+                                    <input
+                                      type="checkbox"
+                                      id={`level-${level.id}`}
+                                      checked={selectedLevels.includes(level.id)}
+                                      onChange={() => handleLevelChange(level.id)}
+                                      className="h-4 w-4 text-[#d62839] focus:ring-[#d62839] rounded"
+                                    />
+                                    <label htmlFor={`level-${level.id}`} className="ml-2 text-[#2d3748] cursor-pointer flex-grow">
+                                      {level.label}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   </div>
                   
                   {/* Department Filter */}
                   <div className="p-5 border-b border-gray-100">
-                    <h3 className="font-medium mb-3 text-gray-700">Department</h3>
-                    <select
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#d62839] text-[#2d3748] bg-white"
-                      value={filterDepartment}
-                      onChange={(e) => setFilterDepartment(e.target.value)}
+                    <div>
+                      <h3 className="font-medium mb-3 text-gray-700">Department</h3>
+                    </div>
+                    
+                    <div 
+                      className="relative"
+                      onClick={() => setDepartmentOpen(!departmentOpen)}
                     >
-                      <option value="">All Departments</option>
-                      {departments.map((dept) => (
-                        <option key={dept} value={dept}>{dept}</option>
-                      ))}
-                    </select>
+                      <div className="w-full px-3 py-2 border border-gray-200 rounded-lg flex items-center justify-between bg-white cursor-pointer">
+                        <span className="text-[#2d3748]">
+                          {selectedDepartments.length === 0 
+                            ? "All Departments" 
+                            : selectedDepartments.length === 1 
+                              ? selectedDepartments[0]
+                              : `${selectedDepartments.length} departments selected`
+                          }
+                        </span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className={`h-5 w-5 text-gray-500 transition-transform duration-300 ${departmentOpen ? 'rotate-180' : ''}`} 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    
+                      <AnimatePresence>
+                        {departmentOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute left-0 right-0 top-full mt-1 z-10"
+                          >
+                            <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden p-2">
+                              <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                                {DEPARTMENTS.slice(1).map(dept => (
+                                  <div key={dept} className="flex items-center p-1 hover:bg-gray-50 rounded">
+                                    <input
+                                      type="checkbox"
+                                      id={`dept-${dept}`}
+                                      checked={selectedDepartments.includes(dept)}
+                                      onChange={() => handleDepartmentChange(dept)}
+                                      className="h-4 w-4 text-[#d62839] focus:ring-[#d62839] rounded"
+                                    />
+                                    <label htmlFor={`dept-${dept}`} className="ml-2 text-[#2d3748] cursor-pointer flex-grow">
+                                      {dept}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
                   
                   {/* Average GPA Range */}
