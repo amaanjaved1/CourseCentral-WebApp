@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Initialize the Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 // Check for environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
@@ -16,10 +17,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Create and export the properly typed Supabase client
-export const supabase = createClient(
-  supabaseUrl || '',  // Fallback to empty string to prevent runtime errors
-  supabaseAnonKey || ''  // Fallback to empty string to prevent runtime errors
-);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Log only in development to avoid leaking in production
 if (process.env.NODE_ENV !== 'production') {

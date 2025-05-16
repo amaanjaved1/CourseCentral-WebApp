@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import Image from 'next/image';
+import Footer from '@/components/Footer';
 
 // Team member data
 const teamMembers = [
@@ -230,13 +231,7 @@ export default function AboutPage() {
       </main>
       
       {/* Footer */}
-      <footer className="py-8 bg-gradient-to-r from-[#00305f]/5 to-[#d62839]/5">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-gray-600 text-sm">
-            © {new Date().getFullYear()} Course Central. Created by Queen's students for Queen's students.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 } 
