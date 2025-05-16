@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
@@ -57,7 +57,7 @@ export default function Navigation() {
         setScrolled(isScrolled);
       }
     };
-
+    
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -123,11 +123,11 @@ export default function Navigation() {
               CourseCentral
             </Link>
           </div>
-
+          
           {/* Desktop navigation */}
           <nav className="hidden md:flex space-x-8">
             <NavLink href="/" label="Home" />
-            <NavLink href="/view-courses" label="View Courses" />
+            <NavLink href="/schools/queens" label="View Courses" />
             <NavLink href="/add-courses" label="Add Courses" />
             <NavLink href="/ai-features" label="AI Assistant" />
             <NavLink href="/about" label="About" />
@@ -161,7 +161,7 @@ export default function Navigation() {
                     <div className="px-4 py-2 border-b border-gray-100">
                       <p className="text-sm font-medium text-gray-900 truncate">me</p>
                     </div>
-                    <Link
+                    <Link 
                       href="/account"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setUserMenuOpen(false)}
@@ -179,14 +179,14 @@ export default function Navigation() {
               </div>
             ) : (
               <>
-                <Link
+                <Link 
                   href="/login"
                   className="text-[#00305f] hover:text-[#00305f]/80 font-medium px-4 py-2 rounded-lg transition-colors"
                 >
                   Log in
                 </Link>
-                <Link
-                  href="/signup"
+                <Link 
+                  href="/signup" 
                   className="bg-gradient-to-r from-[#d62839] to-[#a31e36] hover:from-[#c61e29] hover:to-[#8a1a2e] text-white font-medium px-4 py-2 rounded-lg transition-colors shadow-sm"
                 >
                   Sign up
@@ -194,7 +194,7 @@ export default function Navigation() {
               </>
             )}
           </div>
-
+          
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             {!isLoading && user && (
@@ -205,7 +205,7 @@ export default function Navigation() {
               </div>
             )}
             
-            <button
+            <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="relative w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100/80 transition-all duration-300 ease-in-out focus:outline-none"
               aria-label="Toggle mobile menu"
@@ -217,13 +217,13 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-
+      
       {/* Mobile navigation */}
       {mobileMenuOpen && (
         <nav className="md:hidden bg-white px-4 pt-2 pb-4 border-t border-gray-100 animate-slideDown">
           <div className="flex flex-col space-y-1">
             <MobileNavLink href="/" label="Home" onClick={() => setMobileMenuOpen(false)} />
-            <MobileNavLink href="/view-courses" label="View Courses" onClick={() => setMobileMenuOpen(false)} />
+            <MobileNavLink href="/schools/queens" label="View Courses" onClick={() => setMobileMenuOpen(false)} />
             <MobileNavLink href="/add-courses" label="Add Courses" onClick={() => setMobileMenuOpen(false)} />
             <MobileNavLink href="/ai-features" label="AI Assistant" onClick={() => setMobileMenuOpen(false)} />
             <MobileNavLink href="/about" label="About" onClick={() => setMobileMenuOpen(false)} />
@@ -249,15 +249,15 @@ export default function Navigation() {
                   </>
                 ) : (
                   <>
-                    <Link
+                    <Link 
                       href="/login"
                       className="block px-3 py-3 text-[#00305f] font-medium rounded-lg hover:bg-gray-50 transition-all duration-200"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Log in
                     </Link>
-                    <Link
-                      href="/signup"
+                    <Link 
+                      href="/signup" 
                       className="block px-3 py-3 text-[#d62839] font-medium rounded-lg hover:bg-gray-50 transition-all duration-200"
                       onClick={() => setMobileMenuOpen(false)}
                     >

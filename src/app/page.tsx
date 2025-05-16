@@ -1,9 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import Navigation from "@/components/Navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   const [hasSeenAnimation, setHasSeenAnimation] = useState(true);
@@ -737,70 +739,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-[#00305f] to-[#001c3a] text-white py-8 sm:py-10 px-4 relative">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute h-60 w-60 rounded-full bg-[#d62839]/10 blur-3xl -top-20 right-0 transform rotate-45"></div>
-          <div className="absolute h-40 w-40 rounded-full bg-[#efb215]/10 blur-3xl bottom-10 left-20 animate-pulse-slow"></div>
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d62839] via-[#efb215] to-[#d62839]/70"></div>
-        </div>
-        
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <div className="flex items-center mb-3">
-                <svg width="30" height="30" viewBox="0 0 48 48" className="mr-2">
-                  <path fill="#d62839" d="M8,8v32h32V8H8z M22,36h-4V22h-4v-4h8V36z M34,28h-4v8h-4V16h8V28z"/>
-                </svg>
-                <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">CourseCentral</span>
-              </div>
-              <p className="text-gray-300 mb-3 text-sm">
-                Empowering Queen's students to make informed academic decisions through comprehensive grade data and AI-powered course insights.
-              </p>
-            </div>
-            
-            <div>
-              <h3 className="text-base font-semibold mb-2 border-b border-gray-700 pb-2">Support</h3>
-              <ul className="space-y-1">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white text-sm transition-colors duration-300 flex items-center">
-                    <svg className="w-3 h-3 mr-2 text-[#d62839]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                    Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white text-sm transition-colors duration-300 flex items-center">
-                    <svg className="w-3 h-3 mr-2 text-[#d62839]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white text-sm transition-colors duration-300 flex items-center">
-                    <svg className="w-3 h-3 mr-2 text-[#d62839]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                    Terms of Service
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-700 pt-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-            <div className="text-xs text-gray-400">
-              © {new Date().getFullYear()} CourseCentral. All rights reserved.
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="text-xs text-gray-400">Made with</div>
-              <div className="text-[#d62839] animate-pulse">❤</div>
-              <div className="text-xs text-gray-400">by Queen's students</div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
