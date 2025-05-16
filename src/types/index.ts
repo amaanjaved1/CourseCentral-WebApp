@@ -71,4 +71,18 @@ export type CourseWithStats = Course & {
   termData: TermData[];
   averageGPA: number;
   totalEnrollment: number;
-}; 
+};
+
+// RAG Chunk from database
+export interface RagComment {
+  text: string;
+  professor_name?: string;
+  source_url?: string;
+  tags?: string[];
+  upvotes?: number;
+  sentiment_label?: string;
+  created_at?: string;
+  source?: 'reddit' | 'ratemyprofessors';
+  quality_rating?: number;
+  difficulty_rating?: number;
+} 

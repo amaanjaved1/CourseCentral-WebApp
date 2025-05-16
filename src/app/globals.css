@@ -256,3 +256,5 @@ body {
 .shadow-custom-hover {
   box-shadow: 0 20px 25px -5px rgba(185, 17, 55, 0.1), 0 10px 10px -5px rgba(185, 17, 55, 0.04);
 }
+
+/* Remove global page transitions */

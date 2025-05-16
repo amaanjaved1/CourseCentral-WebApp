@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import FAQAccordionItem from '@/components/FAQAccordionItem';
+import FAQAccordionSection from '@/components/FAQAccordionSection';
 
 export default function Home() {
   const [hasSeenAnimation, setHasSeenAnimation] = useState(true);
@@ -616,96 +618,8 @@ export default function Home() {
             </h2>
           </div>
           
-          <div className="space-y-5">
-            <div className="group bg-white p-7 rounded-xl border border-gray-100 transition-all duration-300 ease-in-out hover:shadow-md hover:border-[#d62839]/30 hover:translate-y-[-2px]">
-              <div className="flex items-start">
-                <div className="mr-4 mt-1">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#d62839]/10 text-[#d62839] group-hover:bg-[#d62839] group-hover:text-white transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#d62839] transition-colors duration-300 mb-2">Is CourseCentral connected to SOLUS?</h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    CourseCentral is not officially connected to SOLUS, but we've collected grade distribution data from multiple reliable sources. You'll need to register for courses through SOLUS after researching them on our platform.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group bg-white p-7 rounded-xl border border-gray-100 transition-all duration-300 ease-in-out hover:shadow-md hover:border-[#00305f]/30 hover:translate-y-[-2px]">
-              <div className="flex items-start">
-                <div className="mr-4 mt-1">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#00305f]/10 text-[#00305f] group-hover:bg-[#00305f] group-hover:text-white transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#00305f] transition-colors duration-300 mb-2">Where does the chatbot get its information?</h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    Our AI advisor is trained on thousands of student reviews from Queen's course catalogs, Reddit discussions, and RateMyProfessor reviews to provide you with comprehensive insights about courses and professors.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group bg-white p-7 rounded-xl border border-gray-100 transition-all duration-300 ease-in-out hover:shadow-md hover:border-[#efb215]/30 hover:translate-y-[-2px]">
-              <div className="flex items-start">
-                <div className="mr-4 mt-1">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#efb215]/10 text-[#efb215] group-hover:bg-[#efb215] group-hover:text-white transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#efb215] transition-colors duration-300 mb-2">How up-to-date is the grade data?</h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    We update our database each semester with the latest grade distributions and course information to ensure you have access to the most current data for decision making.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group bg-white p-7 rounded-xl border border-gray-100 transition-all duration-300 ease-in-out hover:shadow-md hover:border-[#d62839]/30 hover:translate-y-[-2px]">
-              <div className="flex items-start">
-                <div className="mr-4 mt-1">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#d62839]/10 text-[#d62839] group-hover:bg-[#d62839] group-hover:text-white transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#d62839] transition-colors duration-300 mb-2">Is this tool free?</h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    Yes, CourseCentral is completely free for all Queen's University students. We believe in making data-driven course selection accessible to everyone.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group bg-white p-7 rounded-xl border border-gray-100 transition-all duration-300 ease-in-out hover:shadow-md hover:border-[#00305f]/30 hover:translate-y-[-2px]">
-              <div className="flex items-start">
-                <div className="mr-4 mt-1">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#00305f]/10 text-[#00305f] group-hover:bg-[#00305f] group-hover:text-white transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-[#00305f] group-hover:text-[#00305f] transition-colors duration-300 mb-2">What courses are supported?</h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    Currently, CourseCentral only supports on-campus courses at Queen's University. We're working on adding support for online courses in the future, but for now, our data and AI assistant focus exclusively on in-person course offerings.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="min-h-[400px]">
+            <FAQAccordionSection />
           </div>
         </div>
       </section>

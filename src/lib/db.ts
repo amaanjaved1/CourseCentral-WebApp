@@ -358,4 +358,180 @@ export async function debugDatabaseStructure(): Promise<void> {
   } catch (e) {
     console.error("Exception in debugDatabaseStructure:", e);
   }
+}
+
+// Function to fetch Reddit comments for a course
+export async function getRedditCommentsForCourse(courseCode: string): Promise<any[]> {
+  try {
+    // Using raw SQL query exactly as specified
+    const { data, error } = await supabase
+      .from('rag_chunks')
+      .select('text, professor_name, source_url, tags, upvotes, sentiment_label')
+      .eq('course_code', courseCode)
+      .eq('SOURCE', 'reddit') // Changed from 'source' to 'SOURCE' (uppercase)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error(`Error fetching Reddit comments for course ${courseCode}:`, error);
+      console.error("SQL query error details:", JSON.stringify(error));
+      return [];
+    }
+
+    console.log(`Retrieved ${data?.length || 0} Reddit comments for ${courseCode}`);
+    return data || [];
+  } catch (e) {
+    console.error(`Exception in getRedditCommentsForCourse for ${courseCode}:`, e);
+    return [];
+  }
+}
+
+// Function to fetch RateMyProf comments for a course
+export async function getRateMyProfCommentsForCourse(courseCode: string): Promise<any[]> {
+  try {
+    const { data, error } = await supabase
+      .from('rag_chunks')
+      .select('text, professor_name, source_url, sentiment_label, tags, quality_rating, difficulty_rating')
+      .eq('course_code', courseCode)
+      .eq('SOURCE', 'ratemyprofessors') // Changed from 'ratemyprof' to 'ratemyprofessors'
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error(`Error fetching RateMyProf comments for course ${courseCode}:`, error);
+      console.error("SQL query error details:", JSON.stringify(error));
+      return [];
+    }
+
+    console.log(`Retrieved ${data?.length || 0} RateMyProf comments for ${courseCode}`);
+    return data || [];
+  } catch (e) {
+    console.error(`Exception in getRateMyProfCommentsForCourse for ${courseCode}:`, e);
+    return [];
+  }
+}
+
+// Direct query approach for RateMyProf comments
+export async function fetchRateMyProfCommentsDirect(courseCode: string): Promise<any[]> {
+  try {
+    // This is the exact query as specified by the user
+    const { data, error } = await supabase
+      .from('rag_chunks')
+      .select('text, professor_name, source_url, sentiment_label, tags, quality_rating, difficulty_rating')
+      .filter('course_code', 'eq', courseCode)
+      .filter('SOURCE', 'eq', 'ratemyprofessors')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error(`Direct query error for RateMyProf ${courseCode}:`, error);
+      return [];
+    }
+
+    console.log(`Direct query found ${data?.length || 0} RateMyProf results`);
+    return data || [];
+  } catch (e) {
+    console.error(`Exception in fetchRateMyProfCommentsDirect for ${courseCode}:`, e);
+    return [];
+  }
+}
+
+// Function to directly execute the raw SQL query for Reddit comments
+export async function getRedditCommentsRawSQL(courseCode: string): Promise<any[]> {
+  try {
+    const { data, error } = await supabase.rpc('get_reddit_comments', { course_code_param: courseCode });
+
+    if (error) {
+      console.error(`Error executing raw SQL for Reddit comments for ${courseCode}:`, error);
+      
+      // Fallback to direct SQL query without the RPC
+      const query = `
+        SELECT text, professor_name, source_url, tags, upvotes, sentiment_label
+        FROM rag_chunks
+        WHERE course_code = '${courseCode}' AND SOURCE = 'reddit'
+        ORDER BY created_at DESC
+      `;
+      
+      const { data: sqlData, error: sqlError } = await supabase.rpc('execute_sql', { query_text: query });
+      
+      if (sqlError) {
+        console.error("Error with fallback SQL:", sqlError);
+        return [];
+      }
+      
+      console.log("Raw SQL results:", sqlData);
+      return sqlData || [];
+    }
+
+    return data || [];
+  } catch (e) {
+    console.error(`Exception in getRedditCommentsRawSQL for ${courseCode}:`, e);
+    return [];
+  }
+}
+
+// Direct SQL query approach for Reddit comments
+export async function fetchRedditCommentsDirect(courseCode: string): Promise<any[]> {
+  try {
+    // This is the exact query as specified by the user
+    const { data, error } = await supabase
+      .from('rag_chunks')
+      .select('text, professor_name, source_url, tags, upvotes, sentiment_label')
+      .filter('course_code', 'eq', courseCode)
+      .filter('SOURCE', 'eq', 'reddit')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error(`Direct query error for ${courseCode}:`, error);
+      return [];
+    }
+
+    console.log(`Direct query found ${data?.length || 0} results`);
+    return data || [];
+  } catch (e) {
+    console.error(`Exception in fetchRedditCommentsDirect for ${courseCode}:`, e);
+    return [];
+  }
+}
+
+// Function to execute raw SQL for RateMyProf comments
+export async function getRateMyProfRawSQL(courseCode: string): Promise<any[]> {
+  try {
+    // Create the raw SQL query exactly as specified by the user
+    const query = `
+      SELECT text, professor_name, source_url, sentiment_label, tags, quality_rating, difficulty_rating
+      FROM rag_chunks
+      WHERE course_code = '${courseCode}' AND SOURCE = 'ratemyprofessors'
+      ORDER BY created_at DESC
+    `;
+    
+    // Try to execute the query using a stored procedure if available
+    try {
+      const { data, error } = await supabase.rpc('execute_sql', { query_text: query });
+      
+      if (!error && data && data.length > 0) {
+        console.log(`Raw SQL found ${data.length} RateMyProf results`);
+        return data;
+      }
+    } catch (rpcError) {
+      console.error("RPC error:", rpcError);
+      // Continue to fallback methods
+    }
+    
+    // If RPC fails, try a more direct approach with the Supabase client
+    const { data, error } = await supabase
+      .from('rag_chunks')
+      .select('text, professor_name, source_url, sentiment_label, tags, quality_rating, difficulty_rating')
+      .eq('course_code', courseCode)
+      .eq('SOURCE', 'ratemyprofessors')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error(`Final attempt error for RateMyProf ${courseCode}:`, error);
+      return [];
+    }
+    
+    console.log(`Final attempt found ${data?.length || 0} RateMyProf results`);
+    return data || [];
+  } catch (e) {
+    console.error(`Exception in getRateMyProfRawSQL for ${courseCode}:`, e);
+    return [];
+  }
 } 
